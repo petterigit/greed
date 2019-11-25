@@ -66,7 +66,7 @@ const client = new MongoClient(mongoURL, {useUnifiedTopology: true}, { useNewUrl
 client.connect(err => {
   //const collection = client.db("greed").collection("devices");
   // perform actions on the collection object
-  db = client.db('greed');
+  db = client.db(mongoDatabase);
   
   /* var cursor = db.collection('highscores').find();
   cursor.each(function(err, document) {
