@@ -1,0 +1,30 @@
+:root {
+  --main-font-size: 1.5vw;
+  --margin-size: 0.125vw;
+}
+
+body {
+  background-color: #1a001a;
+}
+h2 {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 1.5vw;
+  color: #b5b8bd;
+}
+#greedContainer {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: var(--main-font-size);
+  line-height: 0%;
+  box-sizing: border-box;
+  width: 75%;
+  float: left;
+}
+
+#highScores {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: var(--main-font-size);
+  line-height: 0%;
+  box-sizing: border-box;
+  width: 25%;
+  float: left;
+}
