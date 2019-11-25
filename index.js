@@ -79,12 +79,12 @@ client.connect(err => {
   app.post('/highscores', (req, res) => {
 	  db.collection('highscores').insertOne(req.body, (err, result) => {
 		if (err) return console.log(err)
+		res.redirect('/')
 		console.log('saved to database')
 		let cursor = db.collection('highscores').find();
 		cursor.each(function(err, document) {
 			console.log(document);
 		});
-		res.redirect('/')
 	  })
 	})
   /* Express JS file management */
