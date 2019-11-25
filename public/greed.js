@@ -59,10 +59,6 @@ class PageModel {
           (this.score / (this.modelSize.X * this.modelSize.Y)) *
           100
         ).toFixed(2);
-		console.log(this.score);
-		console.log(this.modelSize.X);
-		console.log(this.modelSize.Y);
-		console.log(this.scorePercentage);
       }
     }
   }
