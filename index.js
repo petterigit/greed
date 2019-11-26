@@ -61,44 +61,40 @@ if (mongoURL == null) {
   }
 }
 
+var db = client.db(mongoDatabase);
 
 const client = new MongoClient(mongoURL, {useUnifiedTopology: true}, { useNewUrlParser: true });
+
 client.connect(err => {
-  //const collection = client.db("greed").collection("devices");
-  // perform actions on the collection object
-  db = client.db(mongoDatabase);
+  /* Express JS file management */
+  app.use(express.static('public'))
   
-  /* var cursor = db.collection('highscores').find();
-  cursor.each(function(err, document) {
-	  console.log(document);
+  app.get("/", (req, res) => {
+	res.sendFile(__dirname + "/index.html");
+	db.collection('highscores').insertOne({a:1});
   });
-  */
-  
-  
   
   app.post('/highscores', (req, res) => {
 	  db.collection('highscores').insertOne(req.body, (err, result) => {
 		if (err) return console.log(err)
 		res.redirect('/')
-		console.log('saved to database')
+		
+		/* console.log('saved to database')
 		let cursor = db.collection('highscores').find();
 		cursor.each(function(err, document) {
 			console.log(document);
-		});
+		}); */
 	  })
 	})
-  /* Express JS file management */
-  app.use(express.static('public'))
-  app.get("/", (req, res) => {
-	res.sendFile(__dirname + "/index.html");
-  });
+  
   
   app.listen(port, () => {
-  console.log('listening on ' + port)
+	console.log('listening on ' + port)
+	
   })
+  
+  
   client.close();
-  
-  
 });
 
 function normalizePort(val) {
