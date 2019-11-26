@@ -190,15 +190,15 @@ class PageView {
       }
       this.greedContainer.appendChild(row);
     }
-	let bottom_message = document.createElement("h2");
+	//let bottom_message = document.createElement("h2");
 	let message_text = "Score: - | - %";
 	message_text += "<br>Controls";
 	message_text += "<br>W A S D	Move";
 	message_text += "<br>R			Reset Grid";
 	message_text += "<br>T			Save a highscore (And reset)";
 	message_text += "<br>K			Show highscores (In a different page)";
-	bottom_message.innerHTML = message_text;
-	this.infoContainer.appendChild(bottom_message);
+	//bottom_message.innerHTML = message_text;
+	this.infoContainer.innerHTML = "<h2>" + message_text + "</h2>";
   }
 
   renderGreedView(greedModel, modelSize, playerPos, gameState, score, scorePercentage) {
@@ -220,14 +220,14 @@ class PageView {
       }
       row = row.nextSibling;
     }
-	let bottom_message = this.infoContainer.firstChild;
+	//let bottom_message = this.infoContainer.firstChild;
 	let message_text = "Score: " + score + " | " + scorePercentage + "%";
 	message_text += "<br>Controls";
 	message_text += "<br>W A S D	Move";
 	message_text += "<br>R			Reset Grid";
 	message_text += "<br>T			Save a highscore (And reset)";
 	message_text += "<br>K			Show highscores (In a different page)";
-	bottom_message.innerHTML = message_text;
+	this.infoContainer.innerHTML = "<h2>" + message_text + "</h2>";
   }
 }
 
