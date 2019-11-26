@@ -1,8 +1,14 @@
 const express = require("express");
 const bodyParser= require('body-parser')
 const MongoClient = require('mongodb').MongoClient;
+var mongoose = require('mongoose');
+const assert = require('assert');
+var promise = require("bluebird");
+var http = require('http');
+var fs = require('fs');
 
 const app = express();
+var server = http.createServer(app);
 app.use(bodyParser.urlencoded({extended: true}))
 
 /* Rahti compatible stuff */
@@ -15,14 +21,10 @@ app.set('port', port);
 
 
 /* Mongo setup */
-//const url = "mongodb+srv://greedadmin:greedadmin@greed-igors.mongodb.net/test?retryWrites=true&w=majority";
 
 // Reading env variables (config example from https://github.com/sclorg/nodejs-ex/blob/master/server.js)
 var mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "";
-
-// For local dev
-// var mongoURL = 'mongodb://localhost:27017/demodb';
 
 if (mongoURL == null) {
   var mongoHost, mongoPort, mongoDatabase, mongoPassword, mongoUser;
@@ -61,41 +63,95 @@ if (mongoURL == null) {
   }
 }
 
-var db = client.db(mongoDatabase);
+mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.Promise = Promise;
+var db = mongoose.connection;
 
-const client = new MongoClient(mongoURL, {useUnifiedTopology: true}, { useNewUrlParser: true });
+db.on('error', console.error.bind(console, 'connection error:'));
 
-client.connect(err => {
+db.once('open', function() {
   /* Express JS file management */
+  var scoreSchema = new mongoose.Schema({
+		name: String,
+		score: String
+	});
+	scoreSchema.methods.log = function() {
+		var message = this.score
+		? "Score of " + this.score + " by " + this.name
+		: "Not a score";
+	  return message;
+	}
+	var Score = mongoose.model('Score', scoreSchema);
+
+	app.post('/highscores', (req, res) => {
+	  var newScore = new Score();
+	  newScore.name = "test";
+	  newScore.score = req.body.score + "";
+	  
+	  newScore.save(function (err, newScore) {
+		if (err) return console.error(err);
+		newScore.log();
+		});
+	  res.redirect('/');
+	});
+	
+  
   app.use(express.static('public'))
   
   app.get("/", (req, res) => {
 	res.sendFile(__dirname + "/index.html");
-	db.collection('highscores').insertOne({a:1});
   });
   
-  app.post('/highscores', (req, res) => {
-	  db.collection('highscores').insertOne(req.body, (err, result) => {
-		if (err) return console.log(err)
-		res.redirect('/')
+  app.post("/gethighscores", (req, res) => {
+		let html_content = "";
 		
-		/* console.log('saved to database')
-		let cursor = db.collection('highscores').find();
-		cursor.each(function(err, document) {
-			console.log(document);
-		}); */
-	  })
-	})
+		html_content += getHtmlTop();
+		
+		html_content += "<h2>Scores</h2>";
+		Score.find(function (err, scores) {
+		  if (err) return console.error(err);
+		  for (let i = 0; i<scores.length; i++) {
+			html_content += "<h2>" + scores[i].name + " " + scores[i].score + "</h2>";
+			console.log(html_content);
+		  }
+		  
+		  html_content += getHtmlTail();
+		  fs.writeFile(__dirname + "/public/highscores.html", html_content, function (err) {
+			if (err) throw err;
+			res.sendFile(__dirname + "/public/highscores.html");
+			});
+		});
+		
+		
+			
+  });
   
-  
-  app.listen(port, () => {
-	console.log('listening on ' + port)
-	
+  app.listen(8080, () => {
+  console.log('listening on 8080')
   })
   
-  
-  client.close();
 });
+
+
+function getHtmlTail() {
+	
+	let text = "";
+	text += '</body></html>'
+	return text;
+	
+}
+
+function getHtmlTop() {
+	
+	let text = "";
+	text += '<!DOCTYPE html><html><head>'
+	text += '<link rel="stylesheet" type="text/css" href="styles.css">'
+	text += '<meta charset="UTF-8" /><title>Greed</title>'
+	text += '</head><body>'
+	return text;
+	console.log(text);
+}
+
 
 function normalizePort(val) {
   var port = parseInt(val, 10);

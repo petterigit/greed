@@ -154,7 +154,7 @@ class PageView {
   constructor() {
     this.pageElement = null;
     this.greedContainer = null;
-    this.highScores = null;
+    this.infoContainer = null;
   }
   initialize() {
     this.getElements();
@@ -162,12 +162,12 @@ class PageView {
   getElements() {
     this.pageElement = document.getElementById("page");
     this.greedContainer = document.getElementById("greedContainer");
-    this.highScores = document.getElementById("highScores");
+    this.infoContainer = document.getElementById("infoContainer");
   }
   resetView() {
     this.pageElement = null;
     this.greedContainer = null;
-    this.highScores = null;
+    this.infoContainer = null;
     this.initialize();
   }
   createGreedView(greedModel, modelSize, playerPos) {
@@ -191,8 +191,14 @@ class PageView {
       this.greedContainer.appendChild(row);
     }
 	let bottom_message = document.createElement("h2");
-	bottom_message.innerHTML = "Score: 0 | 0% Press 'r' to restart or 't' to save score";
-	this.greedContainer.appendChild(bottom_message);
+	let message_text = "Score: 0 | 0%";
+	message_text += "<br></br>Controls";
+	message_text += "<br>W A S D	Move";
+	message_text += "<br>R			Reset Grid";
+	message_text += "<br>T			Save a highscore (And reset)";
+	message_text += "<br>K			Show highscores (In a different page)";
+	bottom_message.innerHTML = message_text;
+	this.infoContainer.appendChild(bottom_message);
   }
 
   renderGreedView(greedModel, modelSize, playerPos, gameState, score, scorePercentage) {
@@ -214,12 +220,14 @@ class PageView {
       }
       row = row.nextSibling;
     }
-	let bottom_message = row;
-	bottom_message.innerHTML = "Score: " + score + " | " + scorePercentage + "% Press 'r' to restart or 't' to save score";
-    /* if (gameState === false) {
-      alert("Game over");
-    }
-	*/
+	let bottom_message = this.infoContainer.firstChild;
+	let message_text = "Score: " + score + " | " + scorePercentage + "%";
+	message_text += "<br>Controls";
+	message_text += "<br>W A S D	Move";
+	message_text += "<br>R			Reset Grid";
+	message_text += "<br>T			Save a highscore (And reset)";
+	message_text += "<br>K			Show highscores (In a different page)";
+	bottom_message.innerHTML = message_text;
   }
 }
 
@@ -227,7 +235,6 @@ class MenuView {
   constructor() {
     this.pageElement = null;
     this.greedContainer = null;
-    this.highScores = null;
   }
   initialize() {
     this.getElements();
@@ -235,12 +242,10 @@ class MenuView {
   getElements() {
     this.pageElement = document.getElementById("page");
     this.greedContainer = document.getElementById("greedContainer");
-    this.highScores = document.getElementById("highScores");
   }
   resetView() {
     this.pageElement = null;
     this.greedContainer = null;
-    this.highScores = null;
   }
   createMenuView() {
     let menutext = document.createElement("h2");
@@ -325,6 +330,8 @@ class PageController {
         }
       } else if (event.code === "KeyR") {
         pageController.resetGame();
+	  } else if (event.code === "KeyK") {
+        getScores();
       } else if (event.code === "KeyT") {
 		post("/highscores/", {score: pageController.pageModel.score});
 	  }
@@ -387,8 +394,10 @@ function removeChilds(containerName) {
 }
 
 function getScores() {
+  let scoreArray;
   
-  return scoreArray;
+  let form = document.getElementById("getScoresForm");
+  form.submit();
 }
 
 /**
