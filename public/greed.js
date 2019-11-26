@@ -191,8 +191,8 @@ class PageView {
       this.greedContainer.appendChild(row);
     }
 	let bottom_message = document.createElement("h2");
-	let message_text = "Score: 0 | 0%";
-	message_text += "<br></br>Controls";
+	let message_text = "Score: - | - %";
+	message_text += "<br>Controls";
 	message_text += "<br>W A S D	Move";
 	message_text += "<br>R			Reset Grid";
 	message_text += "<br>T			Save a highscore (And reset)";
@@ -308,7 +308,9 @@ class PageController {
       this.pageModel.greedModel,
       this.pageModel.modelSize,
       this.pageModel.playerPos,
-      this.pageModel.gameState
+      this.pageModel.gameState,
+	  this.pageModel.score,
+	  this.pageModel.scorePercentage
     );
   }
   setGreedListener() {
