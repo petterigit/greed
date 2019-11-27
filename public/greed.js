@@ -332,6 +332,7 @@ class PageController {
         pageController.move({ X: 1, Y: 0 });
       } else if (event.code === "Enter") {
         if (pageController.viewType === "menu") {
+		pageController.setPlayerInfo();
           removeChilds("greedContainer");
           pageController.menuView.resetView();
           pageController.initialize();
@@ -342,7 +343,6 @@ class PageController {
 	  } else if (event.code === "KeyK") {
         getScores();
       } else if (event.code === "KeyT") {
-	      pageController.setPlayerInfo();
 		post("/highscores/", {name: pageController.pageModel.playerName, score: pageController.pageModel.score});
 	  }
       pageController.renderView();
