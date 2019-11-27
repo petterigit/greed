@@ -6,6 +6,7 @@ class PageModel {
     this.score = 0;
     this.scorePercentage = 0;
     this.gameState = true;
+	this.playerName = "";
   }
 
   initialize() {
@@ -29,6 +30,7 @@ class PageModel {
     this.score = 0;
     this.scorePercentage = 0;
     this.gameState = true;
+	this.playerName = "";
     this.initialize();
   }
 
@@ -196,7 +198,7 @@ class PageView {
 	message_text += "<br>W A S D	Move";
 	message_text += "<br>R			Reset Grid";
 	message_text += "<br>T			Save a highscore (And reset)";
-	message_text += "<br>K			Show highscores (In a different page)";
+	message_text += "<br>K			Show highscores (Reloads page)";
 	//bottom_message.innerHTML = message_text;
 	this.infoContainer.innerHTML = "<h2>" + message_text + "</h2>";
   }
@@ -264,11 +266,11 @@ class PageController {
 
   initializeMenu() {
     menuView.initialize();
+	pageModel.initialize();
     this.createView("menu");
     this.setGreedListener();
   }
   initialize() {
-	pageModel.initialize();
     pageView.initialize();
     this.createView("greed");
   }
@@ -313,6 +315,11 @@ class PageController {
 	  this.pageModel.scorePercentage
     );
   }
+  setPlayerInfo() {
+	  this.pageModel.playerName = prompt("Enter your name");
+	  console.log(this.pageModel.playerName);
+  }
+  
   setGreedListener() {
     document.addEventListener("keypress", function(event) {
       if (event.code === "KeyW") {
@@ -325,6 +332,7 @@ class PageController {
         pageController.move({ X: 1, Y: 0 });
       } else if (event.code === "Enter") {
         if (pageController.viewType === "menu") {
+		  pageController.setPlayerInfo();
           removeChilds("greedContainer");
           pageController.menuView.resetView();
           pageController.initialize();
@@ -335,7 +343,7 @@ class PageController {
 	  } else if (event.code === "KeyK") {
         getScores();
       } else if (event.code === "KeyT") {
-		post("/highscores/", {score: pageController.pageModel.score});
+		post("/highscores/", {name: pageController.pageModel.playerName, score: pageController.pageModel.score});
 	  }
       pageController.renderView();
     });

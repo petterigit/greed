@@ -85,7 +85,7 @@ db.once('open', function() {
 
 	app.post('/highscores', (req, res) => {
 	  var newScore = new Score();
-	  newScore.name = "test";
+	  newScore.name = req.body.name + "";
 	  newScore.score = req.body.score + "";
 	  
 	  newScore.save(function (err, newScore) {
@@ -112,7 +112,6 @@ db.once('open', function() {
 		  if (err) return console.error(err);
 		  for (let i = 0; i<scores.length; i++) {
 			html_content += "<h2>" + scores[i].name + " " + scores[i].score + "</h2>";
-			console.log(html_content);
 		  }
 		  
 		  html_content += getHtmlTail();
@@ -149,7 +148,6 @@ function getHtmlTop() {
 	text += '<meta charset="UTF-8" /><title>Greed</title>'
 	text += '</head><body>'
 	return text;
-	console.log(text);
 }
 
 
