@@ -61,7 +61,11 @@ class PageModel {
           (this.score / (this.modelSize.X * this.modelSize.Y)) *
           100
         ).toFixed(2);
-      }
+      document.getElementById("blip").play();
+      } else {
+		//console.log("Bump");
+		document.getElementById("bump").play();
+	  }
     }
   }
   nullMovementLine(movement) {
@@ -72,83 +76,93 @@ class PageModel {
     }
   }
   allowMovement(movement) {
-    if (movement.X === undefined || movement.Y === undefined) {
-      return 0;
-    }
-    if (movement.X === 0 && movement.Y === 0) {
-      return 0;
-    }
-    if (movement.X !== 0) {
-      for (let i = 0; i < Math.abs(movement.X); i++) {
-        let next = this.greedModel[this.playerPos.Y][
-          this.playerPos.X + (i + 1) * Math.sign(movement.X)
-        ];
-        if (next === null || next === undefined) {
-          return 0;
-        }
-      }
-    } else if (movement.Y !== 0) {
-      for (let i = 0; i < Math.abs(movement.Y); i++) {
-        let next = this.greedModel[
-          this.playerPos.Y + (i + 1) * Math.sign(movement.Y)
-        ][this.playerPos.X];
-        if (next === null || next === undefined) {
-          return 0;
-        }
-      }
-    }
+	  try {
+		if (movement.X === undefined || movement.Y === undefined ) {
+		  return 0;
+		}
+		if (movement.X === 0 && movement.Y === 0) {
+		  return 0;
+		}
+		if (movement.X !== 0) {
+		  for (let i = 0; i < Math.abs(movement.X); i++) {
+			let next = this.greedModel[this.playerPos.Y][
+			  this.playerPos.X + (i + 1) * Math.sign(movement.X)
+			];
+			if (next === null || next === undefined) {
+			  return 0;
+			}
+		  }
+		} else if (movement.Y !== 0) {
+		  for (let i = 0; i < Math.abs(movement.Y); i++) {
+			let next = this.greedModel[
+			  this.playerPos.Y + (i + 1) * Math.sign(movement.Y)
+			][this.playerPos.X];
+			if (next === null || next === undefined) {
+			  return 0;
+			}
+		  }
+		}
+	  } catch (err) {
+		  //console.log(err.message);
+		  // type-error -> bad tile
+		  return 0;
+	  }
     return 1;
   }
   getMovement(movement) {
-    if (movement.X === 0 && movement.Y === 1) {
-      let adjacent = this.greedModel[this.playerPos.Y + 1][this.playerPos.X];
-      if (this.playerPos.Y + 1 > this.modelSize.Y) {
-        return { X: 0, Y: 0 };
-      }
-      if (adjacent === null) {
-        return { X: 0, Y: 0 };
-      }
-      return {
-        X: 0,
-        Y: adjacent
-      };
-    } else if (movement.X === 0 && movement.Y === -1) {
-      let adjacent = this.greedModel[this.playerPos.Y - 1][this.playerPos.X];
-      if (this.playerPos.Y - 1 < 0) {
-        return { X: 0, Y: 0 };
-      }
-      if (adjacent === null) {
-        return { X: 0, Y: 0 };
-      }
-      return {
-        X: 0,
-        Y: -adjacent
-      };
-    } else if (movement.X === -1 && movement.Y === 0) {
-      let adjacent = this.greedModel[this.playerPos.Y][this.playerPos.X - 1];
-      if (this.playerPos.X - 1 < 0) {
-        return { X: 0, Y: 0 };
-      }
-      if (adjacent === null) {
-        return { X: 0, Y: 0 };
-      }
-      return {
-        X: -adjacent,
-        Y: 0
-      };
-    } else if (movement.X === 1 && movement.Y === 0) {
-      let adjacent = this.greedModel[this.playerPos.Y][this.playerPos.X + 1];
-      if (this.playerPos.X + 1 > this.modelSize.X) {
-        return { X: 0, Y: 0 };
-      }
-      if (adjacent === null) {
-        return { X: 0, Y: 0 };
-      }
-      return {
-        X: adjacent,
-        Y: 0
-      };
-    }
+	try {
+		if (movement.X === 0 && movement.Y === 1) {
+		  let adjacent = this.greedModel[this.playerPos.Y + 1][this.playerPos.X];
+		  if (this.playerPos.Y + 1 > this.modelSize.Y) {
+			return { X: 0, Y: 0 };
+		  }
+		  if (adjacent === null) {
+			return { X: 0, Y: 0 };
+		  }
+		  return {
+			X: 0,
+			Y: adjacent
+		  };
+		} else if (movement.X === 0 && movement.Y === -1) {
+		  let adjacent = this.greedModel[this.playerPos.Y - 1][this.playerPos.X];
+		  if (this.playerPos.Y - 1 < 0) {
+			return { X: 0, Y: 0 };
+		  }
+		  if (adjacent === null) {
+			return { X: 0, Y: 0 };
+		  }
+		  return {
+			X: 0,
+			Y: -adjacent
+		  };
+		} else if (movement.X === -1 && movement.Y === 0) {
+		  let adjacent = this.greedModel[this.playerPos.Y][this.playerPos.X - 1];
+		  if (this.playerPos.X - 1 < 0) {
+			return { X: 0, Y: 0 };
+		  }
+		  if (adjacent === null) {
+			return { X: 0, Y: 0 };
+		  }
+		  return {
+			X: -adjacent,
+			Y: 0
+		  };
+		} else if (movement.X === 1 && movement.Y === 0) {
+		  let adjacent = this.greedModel[this.playerPos.Y][this.playerPos.X + 1];
+		  if (this.playerPos.X + 1 > this.modelSize.X) {
+			return { X: 0, Y: 0 };
+		  }
+		  if (adjacent === null) {
+			return { X: 0, Y: 0 };
+		  }
+		  return {
+			X: adjacent,
+			Y: 0
+		  };
+		}
+	} catch (err) {
+		return({X: 0, Y: 0});
+	}
   }
 }
 
@@ -332,6 +346,7 @@ class PageController {
         pageController.move({ X: 1, Y: 0 });
       } else if (event.code === "Enter") {
         if (pageController.viewType === "menu") {
+		  document.getElementById("startup").play();
 		  pageController.setPlayerInfo();
           removeChilds("greedContainer");
           pageController.menuView.resetView();
@@ -369,6 +384,7 @@ var menuView = new MenuView();
 var pageController = new PageController(pageModel, pageView, menuView);
 
 
+//77777document.getElementById("startup").play();
 pageController.initializeMenu();
 
 function getColor(inputNumber) {
