@@ -331,7 +331,6 @@ class PageController {
   }
   setPlayerInfo() {
 	  this.pageModel.playerName = prompt("Enter your name");
-	  //console.log(this.pageModel.playerName);
   }
   
   setGreedListener() {
