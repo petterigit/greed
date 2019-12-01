@@ -348,6 +348,7 @@ class PageController {
         if (pageController.viewType === "menu") {
 		  document.getElementById("startup").play();
 		  pageController.setPlayerInfo();
+		pageController.setPlayerInfo();
           removeChilds("greedContainer");
           pageController.menuView.resetView();
           pageController.initialize();
@@ -383,8 +384,6 @@ var pageView = new PageView();
 var menuView = new MenuView();
 var pageController = new PageController(pageModel, pageView, menuView);
 
-
-//77777document.getElementById("startup").play();
 pageController.initializeMenu();
 
 function getColor(inputNumber) {
