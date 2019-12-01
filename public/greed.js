@@ -331,7 +331,7 @@ class PageController {
   }
   setPlayerInfo() {
 	  this.pageModel.playerName = prompt("Enter your name");
-	  console.log(this.pageModel.playerName);
+	  //console.log(this.pageModel.playerName);
   }
   
   setGreedListener() {
@@ -348,7 +348,6 @@ class PageController {
         if (pageController.viewType === "menu") {
 		  document.getElementById("startup").play();
 		  pageController.setPlayerInfo();
-		pageController.setPlayerInfo();
           removeChilds("greedContainer");
           pageController.menuView.resetView();
           pageController.initialize();
